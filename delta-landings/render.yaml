@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: delta-landings
+    runtime: node
+    plan: free
+    region: oregon
+    branch: main
+    buildCommand: "cd server && npm install && cd ../client && npm install && npm run build"
+    startCommand: "cd server && npm run seed && npm start"
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: 20.11.0
+      - key: JWT_SECRET
+        generateValue: true
+      - key: STAFF_INVITE_CODE
+        sync: false
+      - key: ADMIN_INVITE_CODE
+        sync: false
+      - key: DATA_DIR
+        value: /var/data/db
+      - key: UPLOAD_DIR
+        value: /var/data/uploads
+    disk:
+      name: delta-landings-data
+      mountPath: /var/data
+      sizeGB: 1
